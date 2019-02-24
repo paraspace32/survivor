@@ -11,11 +11,6 @@ module Simulate
     end
 
     def add_person_to_circle
-      if @count == 0
-        puts 'Please add more people'
-        return
-      end
-
       @count.times do |id|
         @circle.group << Person.new(id)
       end
@@ -25,10 +20,10 @@ module Simulate
       group = @circle.group
       current_person = group.first
 
-      return if group.length == 0
+      return 'Please add people to circle' if group.length.zero?
 
       if group.length == 1
-        puts "Alive Person #{group.first.id}"
+        return "Alive Person: #{group.first.id}"
       else
         @count.times do
           next_person = @circle.next_left(group)
@@ -37,8 +32,7 @@ module Simulate
           current_person = @circle.next_left(group)
 
           if current_person.id == previous_person.id
-            puts "Alive Person #{current_person.id}"
-            break
+            return "Alive Person: #{current_person.id}"
           end
         end
       end
@@ -53,9 +47,9 @@ module Simulate
 end
 
 begin
-  object = Simulate::Action.new(n = 10) # Add number of people here
+  object = Simulate::Action.new(10) # Add number of people here
   object.add_person_to_circle
-  object.find_alive_person
-rescue StandardError => e
+  puts object.find_alive_person
+rescue StandardError
   raise StandardError, 'Server is temporary down. Please try later'
 end
